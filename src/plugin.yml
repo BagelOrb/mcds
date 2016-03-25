@@ -1,0 +1,10 @@
+name: MinecraftDontStarve
+main: main.MinecraftDontStarve
+description: MinecraftDontStarve descr
+version: 0.1
+author: JB
+depend:
+ - MassiveCore
+commands:
+ mcds:
+  description: Use /mcds to do MinecraftDontStarve stuff.
