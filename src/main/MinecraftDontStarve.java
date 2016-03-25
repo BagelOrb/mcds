@@ -44,7 +44,7 @@ public class MinecraftDontStarve extends MassivePlugin {
 	public void onEnable() {
 //		ItemStack rum = new ItemStack(Material.MILK_BUCKET, 1);
 //		ItemMeta meta = rum.getItemMeta();
-//		meta.setDisplayName("Jew Juice");
+//		meta.setDisplayName("Lol Juice");
 //		rum.setItemMeta(meta);
 //		
 //		ShapedRecipe craftRum = new ShapedRecipe(rum);
