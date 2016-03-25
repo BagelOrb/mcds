@@ -4,11 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import main.Debug;
-import main.MinecraftDontStarve;
 
 import org.bukkit.World;
-import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class BlockSeasonChanger extends BukkitRunnable {

@@ -47,7 +47,7 @@ public class SeasonListener implements Listener
     	{
     		return;
     	}
-		float mod = SeasonChanger.rainChanceModifier();
+		float mod = MinecraftDontStarve.current_season.getRainChance();
 		if (!event.toWeatherState())
 		{
 			mod = 1.0f / mod;
@@ -61,7 +61,7 @@ public class SeasonListener implements Listener
     	{
     		return;
     	}
-		float mod = SeasonChanger.thunderChanceModifier();
+		float mod = MinecraftDontStarve.current_season.getThunderChance();
 		if (!event.toThunderState())
 		{
 			mod = 1.0f / mod;

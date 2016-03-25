@@ -139,7 +139,7 @@ public class BlockArrayIO {
 	public static void main(String [ ] args)
 	{
 		ArrayList<Datum> data = new ArrayList<Datum>();
-		boolean success = read(data);
+		read(data);
 		for (Datum datum : data)
 		{
 			System.out.println(""+ datum.x +", "+datum.z+": "+datum.biome);
