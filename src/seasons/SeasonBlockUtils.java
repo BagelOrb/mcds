@@ -28,9 +28,25 @@ public class SeasonBlockUtils {
 		}
 	}
 	
+	public static boolean blockRemainsUnchanged(Block block)
+	{		
+		if (block.getY() > 92 && isExtremeHills(block.getBiome()))
+		{
+			if (block.getY() > 96 || random.nextBoolean())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public static void makeIceOrSnow(int x, int z)
 	{
 		Block block = MinecraftDontStarve.defaultWorld.getHighestBlockAt(x, z);
+		if (blockRemainsUnchanged(block))
+		{
+			return;
+		}
 		if (block.getType() == Material.AIR)
 		{
 			block.setType(Material.SNOW);					
@@ -43,13 +59,11 @@ public class SeasonBlockUtils {
 	public static void thaw(int x, int z)
 	{
 		Block block = MinecraftDontStarve.defaultWorld.getHighestBlockAt(x, z);
-		if (block.getY() > 92 && isExtremeHills(block.getBiome()))
+		if (blockRemainsUnchanged(block))
 		{
-			if (block.getY() > 96 || random.nextBoolean())
-			{
-				return;
-			}
+			return;
 		}
+
 		if (block.getType() == Material.SNOW)
 		{
 			block.setType(Material.AIR);					

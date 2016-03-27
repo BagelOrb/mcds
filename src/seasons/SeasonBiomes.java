@@ -4,17 +4,50 @@ import org.bukkit.block.Biome;
 
 public class SeasonBiomes {
 
-	public static Biome getNewBiome(Biome original, Season season)
+	public static boolean biomeRemainsUnchanged(Biome biome)
 	{
-		switch (original)
+		switch (biome)
 		{
 		case DEEP_OCEAN:
+		case OCEAN:
+			
 		case DESERT:
+		case DESERT_HILLS:
+		case MUTATED_DESERT:
+			
 		case SAVANNA:
+		case SAVANNA_ROCK:
+		case MUTATED_SAVANNA:
+		case MUTATED_SAVANNA_ROCK:
+			
 		case MESA:
-			return original;
+		case MESA_CLEAR_ROCK:
+		case MESA_ROCK:
+		case MUTATED_MESA:
+		case MUTATED_MESA_CLEAR_ROCK:
+		case MUTATED_MESA_ROCK:
+			
+		case FROZEN_OCEAN:
+		case FROZEN_RIVER:
+		case ICE_FLATS:
+		case ICE_MOUNTAINS:
+		case MUTATED_ICE_FLATS:
+			
+		case COLD_BEACH:
+		case MUTATED_TAIGA_COLD:
+		case TAIGA_COLD:
+		case TAIGA_COLD_HILLS:
+			return true;
 		default:
-			// execute normal code below
+			return false;
+		}
+	}
+	
+	public static Biome getNewBiome(Biome original, Season season)
+	{
+		if (biomeRemainsUnchanged(original))
+		{
+			return original;
 		}
 		switch (season)
 		{

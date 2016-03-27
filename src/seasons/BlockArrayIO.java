@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -41,6 +42,55 @@ public class BlockArrayIO {
 		
 	}
 	
+	public static class Data implements Iterable<Datum>
+	{
+		char[] data;
+		int size;
+		public Data(int size)
+		{
+			this.size = size;
+			data = new char[size * 3];
+		}
+		public Datum getDatum(int index)
+		{
+			int data_idx = index * 3;
+			return new Datum((short) data[data_idx], (short) data[data_idx + 1], biomes[data[data_idx + 2]]);
+		}
+		public void setDatum(int index, char x, char z, char biome)
+		{
+			int data_idx = index * 3;
+			data[data_idx + 0] = x;
+			data[data_idx + 1] = z;
+			data[data_idx + 2] = biome;
+			
+		}
+		public int getSize() {
+			return data.length / 3;
+		}
+		
+		public class DatumIterator implements Iterator<Datum>
+		{
+			int data_idx = 0;
+			@Override
+			public boolean hasNext() {
+				return data_idx < size - 1;
+			}
+
+			@Override
+			public Datum next() {
+				Datum ret = new Datum((short) data[data_idx], (short) data[data_idx + 1], data[data_idx + 2]);
+				data_idx++;
+				return ret;
+			}
+			
+		}
+		
+		@Override
+		public Iterator<Datum> iterator() {
+			return new DatumIterator();
+		}
+	}
+	
 	public static boolean write()
 	{
 		LinkedList<Datum> data = new LinkedList<Datum>();
@@ -52,7 +102,11 @@ public class BlockArrayIO {
 		{
 			for (short z = (short) (border.getCenter().getBlockZ() - radius); z < border.getCenter().getBlockZ() + radius; z++)
 			{
-				data.add(new Datum(x, z, world.getBiome(x,  z)));
+				Biome biome = world.getBiome(x,  z);
+				if (!SeasonBiomes.biomeRemainsUnchanged(biome))
+				{
+					data.add(new Datum(x, z, biome));
+				}
 			}
 			if (x % 8 == 0)
 			{
@@ -67,7 +121,11 @@ public class BlockArrayIO {
 		
 		Debug.out("data size: "+data.size());
 		
-		return write(data);
+		boolean success = write(data);
+		
+		data = null;
+		
+		return success;
 	}
 	
 	public static boolean write(Iterable<Datum> data)
@@ -96,9 +154,9 @@ public class BlockArrayIO {
 		return true;
 	}
 	
-	public static boolean read(List<Datum> data)
+	public static boolean read()
 	{
-
+		Data data = MinecraftDontStarve.original_biomes;
 		BufferedReader reader = null;
 		try {
 			Path path = Paths.get("BS.xyzData");
@@ -110,9 +168,11 @@ public class BlockArrayIO {
 			reader = Files.newBufferedReader(path);
 			
 			char[] dats = new char[3];
+			int idx = 0;
 			while (reader.read(dats) != -1) 
 			{
-				data.add(new Datum((short) dats[0], (short) dats[1], dats[2]));
+				data.setDatum(idx, dats[0], dats[1], dats[2]);
+				idx++;
 			}
 			reader.close();
 			
@@ -135,14 +195,4 @@ public class BlockArrayIO {
 		return true;
 	}
 	
-	//TODO: Make not banana: 
-	public static void main(String [ ] args)
-	{
-		ArrayList<Datum> data = new ArrayList<Datum>();
-		read(data);
-		for (Datum datum : data)
-		{
-			System.out.println(""+ datum.x +", "+datum.z+": "+datum.biome);
-		}
-	}
 }

@@ -24,13 +24,12 @@ public enum Season
     public String getColor() {
         return "<"+color+">";
     }
-    public float getThunderChance()
-    {
-    	return thunder_chance;
-    }
-    
     public float getRainChance()
     {
     	return rain_chance;
+    }
+    public float getThunderChance()
+    {
+    	return thunder_chance;
     }
 }

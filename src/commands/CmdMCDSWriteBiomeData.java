@@ -88,13 +88,12 @@ public class CmdMCDSWriteBiomeData extends MCDSCommand{
 				public void run() {
 					Debug.out("starting reading biomes");
 					
-					MinecraftDontStarve.original_biomes = new ArrayList<BlockArrayIO.Datum>(); 
-					boolean success = BlockArrayIO.read(MinecraftDontStarve.original_biomes);
+					boolean success = BlockArrayIO.read();
 					if (!success)
 					{
 						Debug.out("Couldn't read file!");
 					}
-					Debug.out("biome file contains "+MinecraftDontStarve.original_biomes.size());
+					Debug.out("biome file contains "+MinecraftDontStarve.original_biomes.getSize());
 				}
 			}.runTaskAsynchronously(MinecraftDontStarve.getCurrentPlugin());
 		}
