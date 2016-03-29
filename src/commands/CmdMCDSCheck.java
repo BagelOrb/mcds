@@ -1,8 +1,8 @@
 package commands;
 
 
-import spoiling.PlayerSpoilageUpdater;
 import main.MinecraftDontStarve;
+import spoiling.PlayerSpoilageUpdater;
 
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.util.Txt;

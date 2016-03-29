@@ -7,14 +7,12 @@ import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
 
 import seasons.BlockArrayIO;
-import seasons.BlockArrayIO.Data;
 import seasons.Season;
 import seasons.SeasonListener;
 import spoiling.PlayerSpoilageUpdater;
 import spoiling.SpoilListener;
 
 import com.massivecraft.massivecore.MassivePlugin;
-
 import commands.CmdMCDSCommand;
 
 
@@ -25,8 +23,7 @@ public class MinecraftDontStarve extends MassivePlugin {
 
 	public static World defaultWorld;
 	
-	public static Data original_biomes;
-	
+	public static List<BlockArrayIO.Datum> original_biomes;
 	
 	public static Season current_season = Season.AUTUMN;
 	public static final int ticksPerMinecraftDay = 24000; // default: 24000

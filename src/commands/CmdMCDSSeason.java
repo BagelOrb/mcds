@@ -1,9 +1,9 @@
 package commands;
 
 
+import main.MinecraftDontStarve;
 import seasons.Season;
 import seasons.SeasonChanger;
-import main.MinecraftDontStarve;
 
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.command.type.primitive.TypeString;
@@ -63,6 +63,8 @@ public class CmdMCDSSeason extends MCDSCommand{
 		Season chosenSeason;
 		
 		// Apply
+		Season previousSeason = MinecraftDontStarve.current_season;
+		
 		switch (season) {
 		case "spring":
 			chosenSeason = Season.SPRING;
@@ -90,7 +92,7 @@ public class CmdMCDSSeason extends MCDSCommand{
 		}
 		
 		// Inform
-		player.sendMessage(Txt.parse("<info>Season changed from "+MinecraftDontStarve.current_season.toString() + " to " + chosenSeason.toString()));
+		player.sendMessage(Txt.parse("<info>Season changed from "+previousSeason.toString() + " <info>to " + chosenSeason.toString()+"<info>!"));
 		
 	}
 

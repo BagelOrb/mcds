@@ -8,23 +8,21 @@ import main.Debug;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import seasons.BlockArrayIO.Data;
-
 public class BlockSeasonChanger extends BukkitRunnable {
 
 	World world;
 	Season season;
 	Iterator<BlockArrayIO.Datum> iter;
-	Data data;
+	List<BlockArrayIO.Datum> data;
 	int batch_size;
 	
-	public BlockSeasonChanger(World world, Data original_biomes, Season season, int batch_size)
+	public BlockSeasonChanger(World world, List<BlockArrayIO.Datum> data, Season season, int batch_size)
 	{
 		this.world = world;
-		this.data = original_biomes;
+		this.data = data;
 		this.season = season;
 		this.batch_size = batch_size;
-		iter = original_biomes.iterator();
+		this.iter = data.iterator();
 	}
 	
 	@Override

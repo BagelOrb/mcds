@@ -3,14 +3,12 @@ package commands;
 
 import java.util.ArrayList;
 
-import org.bukkit.block.Biome;
+import main.Debug;
+import main.MinecraftDontStarve;
+
 import org.bukkit.scheduler.BukkitRunnable;
 
 import seasons.BlockArrayIO;
-import seasons.Season;
-import seasons.SeasonChanger;
-import main.Debug;
-import main.MinecraftDontStarve;
 
 import com.massivecraft.massivecore.MassiveException;
 import com.massivecraft.massivecore.command.type.primitive.TypeString;
@@ -88,12 +86,13 @@ public class CmdMCDSWriteBiomeData extends MCDSCommand{
 				public void run() {
 					Debug.out("starting reading biomes");
 					
-					boolean success = BlockArrayIO.read();
+					MinecraftDontStarve.original_biomes = new ArrayList<BlockArrayIO.Datum>(); 
+					boolean success = BlockArrayIO.read(MinecraftDontStarve.original_biomes);
 					if (!success)
 					{
 						Debug.out("Couldn't read file!");
 					}
-					Debug.out("biome file contains "+MinecraftDontStarve.original_biomes.getSize());
+					Debug.out("biome file contains "+MinecraftDontStarve.original_biomes.size());
 				}
 			}.runTaskAsynchronously(MinecraftDontStarve.getCurrentPlugin());
 		}

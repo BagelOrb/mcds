@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -154,9 +153,8 @@ public class BlockArrayIO {
 		return true;
 	}
 	
-	public static boolean read()
+	public static boolean read(List<Datum> data)
 	{
-		Data data = MinecraftDontStarve.original_biomes;
 		BufferedReader reader = null;
 		try {
 			Path path = Paths.get("BS.xyzData");
@@ -168,14 +166,11 @@ public class BlockArrayIO {
 			reader = Files.newBufferedReader(path);
 			
 			char[] dats = new char[3];
-			int idx = 0;
 			while (reader.read(dats) != -1) 
 			{
-				data.setDatum(idx, dats[0], dats[1], dats[2]);
-				idx++;
+				data.add(new Datum((short) dats[0], (short) dats[1], dats[2]));
 			}
 			reader.close();
-			
 			
 
 		} catch (IOException e) {
