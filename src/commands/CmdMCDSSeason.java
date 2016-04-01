@@ -42,6 +42,12 @@ public class CmdMCDSSeason extends MCDSCommand{
 			sender.sendMessage(Txt.parse("<bad>You must be a player to use this command!"));
 			return;
 		}
+		
+		if(!player.isOp())
+		{
+			player.sendMessage(Txt.parse("<bad>You must be OP to use this command!"));
+			return;
+		}	
 
 		// Args
 		String season = this.readArg();
@@ -53,12 +59,11 @@ public class CmdMCDSSeason extends MCDSCommand{
 			return;
 		}
 		
-		if(!player.isOp())
+		if(MinecraftDontStarve.isCurrentlyDoingASeasonTask)
 		{
-			player.sendMessage(Txt.parse("<bad>You must be OP to use this command!"));
+			player.sendMessage(Txt.parse("<bad>There is already a season task in process!"));
 			return;
 		}
-		
 			
 		Season chosenSeason;
 		
@@ -68,22 +73,22 @@ public class CmdMCDSSeason extends MCDSCommand{
 		switch (season) {
 		case "spring":
 			chosenSeason = Season.SPRING;
-			SeasonChanger.startSeason(MinecraftDontStarve.defaultWorld, chosenSeason);
+			SeasonChanger.startSeason(player.getWorld(), chosenSeason);
 			break;
 			
 		case "summer":
 			chosenSeason = Season.SUMMER;
-			SeasonChanger.startSeason(MinecraftDontStarve.defaultWorld, chosenSeason);
+			SeasonChanger.startSeason(player.getWorld(), chosenSeason);
 			break;
 			
 		case "autumn":
 			chosenSeason = Season.AUTUMN;
-			SeasonChanger.startSeason(MinecraftDontStarve.defaultWorld, chosenSeason);
+			SeasonChanger.startSeason(player.getWorld(), chosenSeason);
 			break;
 			
 		case "winter":
 			chosenSeason = Season.WINTER;
-			SeasonChanger.startSeason(MinecraftDontStarve.defaultWorld, chosenSeason);
+			SeasonChanger.startSeason(player.getWorld(), chosenSeason);
 			break;
 
 		default:
@@ -93,6 +98,7 @@ public class CmdMCDSSeason extends MCDSCommand{
 		
 		// Inform
 		player.sendMessage(Txt.parse("<info>Season changed from "+previousSeason.toString() + " <info>to " + chosenSeason.toString()+"<info>!"));
+		
 		
 	}
 

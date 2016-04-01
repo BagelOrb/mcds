@@ -4,10 +4,12 @@ import main.MinecraftDontStarve;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
+
+import com.massivecraft.massivecore.util.Txt;
 
 public class SeasonListener implements Listener 
 {
@@ -36,11 +38,6 @@ public class SeasonListener implements Listener
 	*/
 	
 	@EventHandler
-	public void onBlockBreak(BlockBreakEvent e) 
-	{
-	}
-	
-	@EventHandler
 	public void onWeatherChange(WeatherChangeEvent event)
 	{
     	if (event.isCancelled())
@@ -52,7 +49,7 @@ public class SeasonListener implements Listener
 		{
 			mod = 1.0f / mod;
 		}
-		MinecraftDontStarve.defaultWorld.setWeatherDuration((int) (MinecraftDontStarve.defaultWorld.getWeatherDuration() * mod));
+		event.getWorld().setWeatherDuration((int) (event.getWorld().getWeatherDuration() * mod));
 	}
 	@EventHandler
 	public void onWeatherChange(ThunderChangeEvent event)
@@ -66,7 +63,7 @@ public class SeasonListener implements Listener
 		{
 			mod = 1.0f / mod;
 		}
-		MinecraftDontStarve.defaultWorld.setWeatherDuration((int) (MinecraftDontStarve.defaultWorld.getWeatherDuration() * mod));
+		event.getWorld().setWeatherDuration((int) (event.getWorld().getWeatherDuration() * mod));
 		
 	}
 	
@@ -79,12 +76,13 @@ public class SeasonListener implements Listener
     	}
 		
 		double rand = Math.random();
+		
 		switch (MinecraftDontStarve.current_season)
 		{
 		case SPRING:
 			break;
 		case SUMMER:
-			if (rand < 0.5)
+			if (!event.getBlock().getWorld().hasStorm() && rand < 0.5)
 			{
 				event.setCancelled(true);
 			}
@@ -102,5 +100,20 @@ public class SeasonListener implements Listener
 			}
 			break;
 		}
+	}
+	
+	@EventHandler
+	public void serverListPing(ServerListPingEvent event)
+	{
+		switch(MinecraftDontStarve.current_season)
+		{
+			case WINTER:
+				event.setMotd(Txt.parse("<reset><lime><bold>MineRight.eu<reset> <gold>Minecraft 1.9 Faction Server<reset>\n<aqua><bold><underline>WINTER IS HERE!<reset> <info>Current Season: <reset>"+MinecraftDontStarve.current_season.toString()));
+				break;
+			default:
+				event.setMotd(Txt.parse("<reset><lime><bold>MineRight.eu<reset> <gold>Minecraft 1.9 Faction Server<reset>\n<aqua><bold><underline>WINTER IS COMING!<reset> <info>Current Season: <reset>"+MinecraftDontStarve.current_season.toString()));
+				break;
+		}
+		
 	}
 }

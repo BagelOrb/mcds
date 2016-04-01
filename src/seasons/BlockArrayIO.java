@@ -2,6 +2,7 @@ package seasons;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,7 +39,6 @@ public class BlockArrayIO {
 			this.z = y;
 			this.biome = biome;
 		}
-		
 	}
 	
 	public static class Data implements Iterable<Datum>
@@ -90,53 +90,82 @@ public class BlockArrayIO {
 		}
 	}
 	
-	public static boolean write()
+	public static boolean write(World world)
 	{
 		LinkedList<Datum> data = new LinkedList<Datum>();
+
+		int i = 0;
+		int fileNumber = 0;
+		double blocksPerFile = world.getWorldBorder().getSize() * 16;
+		boolean success = true;
 		
-		World world = MinecraftDontStarve.defaultWorld;
 		WorldBorder border = world.getWorldBorder();
-		int radius = (int) (border.getSize() / 2);
-		for (short x = (short) (border.getCenter().getBlockX() - radius); x < border.getCenter().getBlockX() + radius; x++)
+		
+		if(border.getSize() > MinecraftDontStarve.maxBorderSize)
 		{
-			for (short z = (short) (border.getCenter().getBlockZ() - radius); z < border.getCenter().getBlockZ() + radius; z++)
+			return false;
+		}
+		
+		//TODO Backup old files!
+		
+		//Remove old files
+		if(!deleteAll(world))
+		{
+			return false;
+		}
+		
+		//Create New files
+		int radius = (int) (border.getSize() / 2);
+		
+		for (short z = (short) (border.getCenter().getBlockZ() - radius); z < border.getCenter().getBlockZ() + radius; z++)
+		{
+			for (short x = (short) (border.getCenter().getBlockX() - radius); x < border.getCenter().getBlockX() + radius; x++)
 			{
+			
 				Biome biome = world.getBiome(x,  z);
 				if (!SeasonBiomes.biomeRemainsUnchanged(biome))
 				{
 					data.add(new Datum(x, z, biome));
+					i++;
+					if(i >= blocksPerFile)
+					{
+						long seed = 123;
+						Collections.shuffle(data, new Random(seed));
+						success = success && writeSingleFile(data, world, "biomedata_"+fileNumber+".xzdata");
+						data.clear();
+						fileNumber++;
+						i = 0;
+					}
 				}
 			}
-			if (x % 8 == 0)
+			if (z % 8 == 0)
 			{
-				Debug.out("x: "+x);
+				Debug.out("z: "+z);
 			}
 		}
 		
-		Debug.out("data size: "+data.size());
-		
-		long seed = 123;
-		Collections.shuffle(data, new Random(seed));
-		
-		Debug.out("data size: "+data.size());
-		
-		boolean success = write(data);
-		
+		if(!data.isEmpty())
+		{
+			success = success && writeSingleFile(data, world, "biomedata_"+fileNumber+".xzdata");
+			data.clear();
+		}
+
 		data = null;
 		
 		return success;
 	}
 	
-	public static boolean write(Iterable<Datum> data)
+	public static boolean writeSingleFile(Iterable<Datum> data, World world, String fileName)
 	{
 		try {
-			Path path = Paths.get("BS.xyzData");
+			Path path = Paths.get(MinecraftDontStarve.defaultSavePath+world.getName()+"/"+fileName);
 			if (!Files.exists(path))
 			{
+				Files.createDirectories(Paths.get(MinecraftDontStarve.defaultSavePath+world.getName()+"/"));
 				Files.createFile(path);
 			}
 			
-			BufferedWriter writer = Files.newBufferedWriter(Paths.get("BS.xyzdata"));
+			BufferedWriter writer = Files.newBufferedWriter(Paths.get(MinecraftDontStarve.defaultSavePath+world.getName()+"/"+fileName));
 			for (Datum datum : data)
 			{
 				char[] dats = new char[] { (char) datum.x, (char) datum.z, (char) datum.biome.ordinal() };
@@ -150,14 +179,16 @@ public class BlockArrayIO {
 			e.printStackTrace();
 			return false;
 		}
-		return true;
+		
+		Debug.out(fileName + " saved!");
+		return true;		
 	}
 	
-	public static boolean read(List<Datum> data)
+	public static boolean readSingleFile(List<Datum> data, World world, String fileName)
 	{
 		BufferedReader reader = null;
 		try {
-			Path path = Paths.get("BS.xyzData");
+			Path path = Paths.get(MinecraftDontStarve.defaultSavePath+world.getName()+"/"+fileName);
 			if (!Files.exists(path))
 			{
 				return false;
@@ -188,6 +219,43 @@ public class BlockArrayIO {
 //		
 		
 		return true;
+	}
+	
+	public static boolean readSingleFile(List<Datum> data, World world, int currentFileNumber)
+	{		
+		return readSingleFile(data, world, "biomedata_"+currentFileNumber+".xzdata");
+	}
+	
+	public static boolean readAll(List<Datum> data, World world)
+	{
+		boolean success = true;
+	    File[] files = new File(MinecraftDontStarve.defaultSavePath+world.getName()+"/").listFiles();
+	    for (File file : files)
+	    {
+	    	//TODO Add type check for safe files
+	    	if(file.isFile())
+	    	{
+	    		success = success && readSingleFile(data, world, file.getName());
+	    	}
+	    }
+		
+		return success;
+	}
+	
+	public static boolean deleteAll(World world)
+	{
+		boolean success = true;
+	    File[] files = new File(MinecraftDontStarve.defaultSavePath+world.getName()+"/").listFiles();
+	    for (File file : files)
+	    {
+	    	//TODO Add type check for safe files
+	    	if(file.isFile())
+	    	{
+	    		success = success && file.delete();
+	    	}
+	    }
+		
+		return success;
 	}
 	
 }

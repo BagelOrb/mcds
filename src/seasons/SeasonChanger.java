@@ -1,15 +1,13 @@
 package seasons;
 
-import java.io.File;
+import java.util.ArrayList;
 
+import main.Debug;
 import main.MinecraftDontStarve;
 
 import org.bukkit.World;
 
 public class SeasonChanger {
-	
-	public static File baseSaveLocation = new File("plugins\\mcds\\saves\\");
-
 	
 	public static void startSeason(World world, Season season) 
 	{
@@ -17,8 +15,10 @@ public class SeasonChanger {
 		
 		switch (season) {
 		case SPRING:
+			world.setStorm(false);
 			break;
 		case SUMMER:
+			world.setStorm(false);
 			break;
 		case AUTUMN:
 			break;
@@ -30,18 +30,36 @@ public class SeasonChanger {
 			break;
 		}
 		
-		if (season == Season.SPRING)
+		MinecraftDontStarve.isCancelled = false;
+		MinecraftDontStarve.isCurrentlyDoingASeasonTask = true;
+		startNextFile(world, season);
+	}
+	
+	public static boolean startNextFile(World world, Season season)
+	{
+		MinecraftDontStarve.original_biomes = new ArrayList<BlockArrayIO.Datum>();
+		if(BlockArrayIO.readSingleFile(MinecraftDontStarve.original_biomes, world, MinecraftDontStarve.currentFileNumber))
 		{
-			new BlockSeasonChanger(MinecraftDontStarve.defaultWorld, MinecraftDontStarve.original_biomes, season, 250).runTaskTimer(MinecraftDontStarve.getCurrentPlugin(), 0, 1);
+			Debug.out("Starting file "+MinecraftDontStarve.currentFileNumber+".");
 			
+			if (season == Season.SPRING || season == Season.WINTER)
+			{
+				new BlockSeasonChanger(world, MinecraftDontStarve.original_biomes, season, MinecraftDontStarve.batchSize / 2).runTaskTimer(MinecraftDontStarve.getCurrentPlugin(), 0, MinecraftDontStarve.ticksBetweenBatches);	
+			}
+			else
+			{
+				new BlockSeasonChanger(world, MinecraftDontStarve.original_biomes, season, MinecraftDontStarve.batchSize).runTaskTimer(MinecraftDontStarve.getCurrentPlugin(), 0, MinecraftDontStarve.ticksBetweenBatches);
+			}
+			
+			MinecraftDontStarve.currentFileNumber++;
+			return true;
 		}
-		else 
+		else
 		{
-			new BlockSeasonChanger(MinecraftDontStarve.defaultWorld, MinecraftDontStarve.original_biomes, season, 500).runTaskTimer(MinecraftDontStarve.getCurrentPlugin(), 0, 1);
-			
+			MinecraftDontStarve.isCurrentlyDoingASeasonTask = false;
+			MinecraftDontStarve.currentFileNumber = 0;
+			return false;
 		}
-		
-
 	}
 	
 

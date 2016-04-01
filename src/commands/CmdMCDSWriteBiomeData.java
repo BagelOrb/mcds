@@ -52,7 +52,12 @@ public class CmdMCDSWriteBiomeData extends MCDSCommand{
 			player.sendMessage(Txt.parse("<bad>You must be OP to use this command!"));
 			return;
 		}
-			
+		
+		if(MinecraftDontStarve.isCurrentlyDoingASeasonTask)
+		{
+			player.sendMessage(Txt.parse("<bad>There is already a season task in process!"));
+			return;
+		}
 
 		// Args
 		String rw = this.readArg();
@@ -60,6 +65,8 @@ public class CmdMCDSWriteBiomeData extends MCDSCommand{
 		// Apply
 		if (rw.equals("w"))
 		{
+			MinecraftDontStarve.isCurrentlyDoingASeasonTask = true;
+			/*
 			new BukkitRunnable() {
 				
 				@Override
@@ -75,8 +82,24 @@ public class CmdMCDSWriteBiomeData extends MCDSCommand{
 					{
 						Debug.out("couldnt write biomes");						
 					}
+					
+					MinecraftDontStarve.isCurrentlyDoingASeasonTask = false;
 				}
 			}.runTaskAsynchronously(MinecraftDontStarve.getCurrentPlugin());
+			*/
+			
+			Debug.out("starting writing biomes");
+			boolean success = BlockArrayIO.write(player.getWorld());
+			if (success)
+			{
+				Debug.out("finished writing biomes");
+			}
+			else 
+			{
+				Debug.out("couldnt write biomes");						
+			}
+			MinecraftDontStarve.isCurrentlyDoingASeasonTask = false;
+			
 		}
 		else if (rw.equals("r"))
 		{
@@ -87,7 +110,7 @@ public class CmdMCDSWriteBiomeData extends MCDSCommand{
 					Debug.out("starting reading biomes");
 					
 					MinecraftDontStarve.original_biomes = new ArrayList<BlockArrayIO.Datum>(); 
-					boolean success = BlockArrayIO.read(MinecraftDontStarve.original_biomes);
+					boolean success = BlockArrayIO.readAll(MinecraftDontStarve.original_biomes, player.getWorld());
 					if (!success)
 					{
 						Debug.out("Couldn't read file!");

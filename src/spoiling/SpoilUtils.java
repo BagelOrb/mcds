@@ -190,34 +190,4 @@ public class SpoilUtils {
 			updateSpoilage(item, new_freshness);
 		}
 	}
-	
-	
-	//TODO: Old combine shit
-	
-
-/*
-	public static boolean combine(ItemStack item1, ItemStack item2, ItemStack ret)
-	{
-		Debug.out(item1.getType() + " : " + item2.getType());
-		if (item1.getType() != item2.getType())
-		{
-			return false;
-		}
-		
-		long time1 = getTimeOfBirth(item1);
-		long time2 = getTimeOfBirth(item2);
-		long time = (long) (((float)time1 * item1.getAmount() + (float)time2 * item2.getAmount()) / (item1.getAmount() + item2.getAmount()));
-
-		ret.setType(item1.getType());
-		ret.setAmount(item1.getAmount() + item2.getAmount());
-		setTimeOfBirth(ret,  time);
-
-		Debug.out("hier");
-		item1.setType(Material.APPLE);
-		setTimeOfBirth(item1,  time);
-		setTimeOfBirth(item2,  time);
-		
-		return true;
-	}
-	*/
 }

@@ -2,9 +2,8 @@ package seasons;
 
 import java.util.Random;
 
-import main.MinecraftDontStarve;
-
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -40,9 +39,9 @@ public class SeasonBlockUtils {
 		return false;
 	}
 	
-	public static void makeIceOrSnow(int x, int z)
+	public static void makeIceOrSnow(World world, int x, int z)
 	{
-		Block block = MinecraftDontStarve.defaultWorld.getHighestBlockAt(x, z);
+		Block block = world.getHighestBlockAt(x, z);
 		if (blockRemainsUnchanged(block))
 		{
 			return;
@@ -56,9 +55,9 @@ public class SeasonBlockUtils {
 			block.getRelative(BlockFace.DOWN).setType(Material.ICE);			
 		}
 	}
-	public static void thaw(int x, int z)
+	public static void thaw(World world, int x, int z)
 	{
-		Block block = MinecraftDontStarve.defaultWorld.getHighestBlockAt(x, z);
+		Block block = world.getHighestBlockAt(x, z);
 		if (blockRemainsUnchanged(block))
 		{
 			return;

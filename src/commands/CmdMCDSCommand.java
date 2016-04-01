@@ -16,6 +16,7 @@ public class CmdMCDSCommand extends MCDSCommand{
 	public CmdMCDSSeason CmdMCDSSeason = new CmdMCDSSeason();
 	public CmdMCDSCheck CmdMCDSCheck = new CmdMCDSCheck();
 	public CmdMCDSWriteBiomeData CmdMCDSWriteBiomeData = new CmdMCDSWriteBiomeData();
+	public CmdMCDSCancel CmdMCDSCancel = new CmdMCDSCancel();
 
 	public CmdMCDSCommand()
 	{
@@ -32,6 +33,7 @@ public class CmdMCDSCommand extends MCDSCommand{
 		this.addChild(this.CmdMCDSSeason);
 		this.addChild(this.CmdMCDSCheck);
 		this.addChild(this.CmdMCDSWriteBiomeData);
+		this.addChild(this.CmdMCDSCancel);
 		// Requirements
 		//		this.addRequirements(ReqFactionsEnabled.get());
 		//		this.addRequirements(ReqHasPerm.get(Perm.LIST.node));

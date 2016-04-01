@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import main.Debug;
+import main.MinecraftDontStarve;
 
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -15,6 +16,8 @@ public class BlockSeasonChanger extends BukkitRunnable {
 	Iterator<BlockArrayIO.Datum> iter;
 	List<BlockArrayIO.Datum> data;
 	int batch_size;
+	static int numberDone;
+	static int dataLength;
 	
 	public BlockSeasonChanger(World world, List<BlockArrayIO.Datum> data, Season season, int batch_size)
 	{
@@ -23,6 +26,8 @@ public class BlockSeasonChanger extends BukkitRunnable {
 		this.season = season;
 		this.batch_size = batch_size;
 		this.iter = data.iterator();
+		BlockSeasonChanger.numberDone = 0;
+		BlockSeasonChanger.dataLength = data.size();
 	}
 	
 	@Override
@@ -30,10 +35,12 @@ public class BlockSeasonChanger extends BukkitRunnable {
 	{
 		for (int n = 0; n < batch_size; n++)
 		{
+
 			if (!iter.hasNext())
 			{
-				Debug.out("finished changing season.");
+				Debug.out("Processing list (100%)");
 				this.cancel();
+				SeasonChanger.startNextFile(world, season);
 				return;
 			}
 			BlockArrayIO.Datum datum = iter.next();
@@ -42,24 +49,39 @@ public class BlockSeasonChanger extends BukkitRunnable {
 				Debug.out("Couldn't read!!! WTFFFF");
 				this.cancel();
 				return;
-			}
+			}	
 			
 			world.setBiome(datum.x, datum.z, SeasonBiomes.getNewBiome(datum.biome, season));	
 			if (season == Season.WINTER)
 			{
-				SeasonBlockUtils.makeIceOrSnow(datum.x, datum.z);
+				SeasonBlockUtils.makeIceOrSnow(world, datum.x, datum.z);
 			}
 			else if (season == Season.SPRING)
 			{
-				SeasonBlockUtils.thaw(datum.x, datum.z);				
+				SeasonBlockUtils.thaw(world, datum.x, datum.z);
 			}
 		}
-		if (!iter.hasNext())
+		
+		if(MinecraftDontStarve.isCancelled)
 		{
-			Debug.out("finished changing season.");
+			MinecraftDontStarve.isCurrentlyDoingASeasonTask = false;
+			MinecraftDontStarve.currentFileNumber = 0;
+			Debug.out("CANCELLED! ("+(Math.round((float)(BlockSeasonChanger.numberDone*100)) / BlockSeasonChanger.dataLength)+"%)");
 			this.cancel();
+			return;
 		}
 		
+		if (!iter.hasNext())
+		{
+			Debug.out("Processing list (100%)");
+			this.cancel();
+			SeasonChanger.startNextFile(world, season);
+		}
+		else
+		{
+			BlockSeasonChanger.numberDone = BlockSeasonChanger.numberDone + batch_size;
+			//Debug.out("Processing list ("+(Math.round((float)(BlockSeasonChanger.numberDone*100)) / BlockSeasonChanger.dataLength)+"%)");
+		}
 	}
 
 	

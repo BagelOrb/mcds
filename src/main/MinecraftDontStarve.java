@@ -26,9 +26,20 @@ public class MinecraftDontStarve extends MassivePlugin {
 	public static List<BlockArrayIO.Datum> original_biomes;
 	
 	public static Season current_season = Season.AUTUMN;
-	public static final int ticksPerMinecraftDay = 24000; // default: 24000
-	public static final int maxLifeTimeInMinecraftDays = 10000; // Ultimate maximum lifetime of a food item, default: 10000
-	public static final int delayBetweenPlayerSpoilageChecks = 100; // Time in ticks between spoilage-checking all player invs
+	
+	public static int currentFileNumber = 0;
+	public static boolean isCancelled = true;
+	public static boolean isCurrentlyDoingASeasonTask = false;
+	
+	public static final String defaultSavePath = "plugins/minecraftdontstarve/saves/";
+	
+	public static final int ticksPerMinecraftDay = 24000; // Default: 24000
+	public static final int maxLifeTimeInMinecraftDays = 10000; // Ultimate maximum lifetime of a food item. Default: 10000
+	public static final int delayBetweenPlayerSpoilageChecks = 100; // Time in ticks between spoilage-checking all player invs. Default: 100
+	
+	public static final double maxBorderSize = 10000; // Maximum size (length of a side) of the worldborder to still work with this plugin. Default: 10000
+	public static final int batchSize = 500; // Number of columns in a batch. Default: 500
+	public static final int ticksBetweenBatches = 1; // Number of ticks between each batch. Default: 1
 	
 	public final SeasonListener seasonListener = new SeasonListener(this);
 	public final SpoilListener spoilListener = new SpoilListener(this);
@@ -41,21 +52,10 @@ public class MinecraftDontStarve extends MassivePlugin {
 	
 	@Override
 	public void onEnable() {
-//		ItemStack rum = new ItemStack(Material.MILK_BUCKET, 1);
-//		ItemMeta meta = rum.getItemMeta();
-//		meta.setDisplayName("Lol Juice");
-//		rum.setItemMeta(meta);
-//		
-//		ShapedRecipe craftRum = new ShapedRecipe(rum);
-//		craftRum.shape("%%%","%*%","%%%");
-//		craftRum.setIngredient('%', Material.EMERALD);
-//		craftRum.setIngredient('*', Material.BUCKET);
-//		getServer().addRecipe(craftRum);
-		
 		
 		defaultWorld = Bukkit.getServer().getWorld("world");
 
-		defaultWorld.getWorldBorder().setCenter(defaultWorld.getSpawnLocation());
+		//defaultWorld.getWorldBorder().setCenter(defaultWorld.getSpawnLocation());
 		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(this.seasonListener, this);
