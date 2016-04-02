@@ -8,11 +8,13 @@ import org.bukkit.plugin.PluginManager;
 
 import seasons.BlockArrayIO;
 import seasons.Season;
+import seasons.SeasonIO;
 import seasons.SeasonListener;
 import spoiling.PlayerSpoilageUpdater;
 import spoiling.SpoilListener;
 
 import com.massivecraft.massivecore.MassivePlugin;
+
 import commands.CmdMCDSCommand;
 
 
@@ -32,10 +34,11 @@ public class MinecraftDontStarve extends MassivePlugin {
 	public static boolean isCurrentlyDoingASeasonTask = false;
 	
 	public static final String defaultSavePath = "plugins/minecraftdontstarve/saves/";
+	public static final String seasonSaveFile = "season.txt";
 	
 	public static final int ticksPerMinecraftDay = 24000; // Default: 24000
 	public static final int maxLifeTimeInMinecraftDays = 10000; // Ultimate maximum lifetime of a food item. Default: 10000
-	public static final int delayBetweenPlayerSpoilageChecks = 100; // Time in ticks between spoilage-checking all player invs. Default: 100
+	public static final int delayBetweenPlayerSpoilageChecks = 200; // Time in ticks between spoilage-checking all player invs. Default: 100
 	
 	public static final double maxBorderSize = 10000; // Maximum size (length of a side) of the worldborder to still work with this plugin. Default: 10000
 	public static final int batchSize = 500; // Number of columns in a batch. Default: 500
@@ -55,6 +58,11 @@ public class MinecraftDontStarve extends MassivePlugin {
 		
 		defaultWorld = Bukkit.getServer().getWorld("world");
 
+		if(!SeasonIO.readSeasonFromFile())
+		{
+			Debug.out("ERROR: Couldn't read season from file!!!");
+		}
+		
 		//defaultWorld.getWorldBorder().setCenter(defaultWorld.getSpawnLocation());
 		
 		PluginManager pm = getServer().getPluginManager();
@@ -67,5 +75,6 @@ public class MinecraftDontStarve extends MassivePlugin {
 		outerCommand = new CmdMCDSCommand();
 		//outerCommand.register(getCurrentPlugin());
 		this.activate(outerCommand);
+		
 	}
 }

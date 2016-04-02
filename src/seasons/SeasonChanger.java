@@ -12,6 +12,10 @@ public class SeasonChanger {
 	public static void startSeason(World world, Season season) 
 	{
 		MinecraftDontStarve.current_season = season;
+		if(!SeasonIO.writeSeasonToFile())
+		{
+			Debug.out("ERROR: Couldnt write seaon file!!!");
+		}
 		
 		switch (season) {
 		case SPRING:

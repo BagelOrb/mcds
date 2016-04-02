@@ -29,9 +29,9 @@ public class SeasonBlockUtils {
 	
 	public static boolean blockRemainsUnchanged(Block block)
 	{		
-		if (block.getY() > 92 && isExtremeHills(block.getBiome()))
+		if (block.getY() > 96 && isExtremeHills(block.getBiome()))
 		{
-			if (block.getY() > 96 || random.nextBoolean())
+			if (block.getY() > 100 || random.nextBoolean())
 			{
 				return true;
 			}
