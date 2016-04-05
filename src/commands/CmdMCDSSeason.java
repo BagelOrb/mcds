@@ -20,7 +20,7 @@ public class CmdMCDSSeason extends MCDSCommand{
 		this.addAliases("s", "season");
 
 		// Args
-		this.addParameter(TypeString.get(), "season");
+		this.addParameter("read", TypeString.get(), "season");
 		
 		this.setDesc("Change season");
 		this.setHelp("This command is used to change season");
@@ -42,20 +42,20 @@ public class CmdMCDSSeason extends MCDSCommand{
 			sender.sendMessage(Txt.parse("<bad>You must be a player to use this command!"));
 			return;
 		}
-		
-		if(!player.isOp())
-		{
-			player.sendMessage(Txt.parse("<bad>You must be OP to use this command!"));
-			return;
-		}	
 
 		// Args
 		String season = this.readArg();
 		
 		// Verify
-		if(season==null)
+		if(season==null || season.equalsIgnoreCase(("read")))
 		{
 			player.sendMessage(Txt.parse("<info>Current season: "+MinecraftDontStarve.current_season.toString()));
+			return;
+		}
+		
+		if(!player.isOp())
+		{
+			player.sendMessage(Txt.parse("<bad>You must be OP to use this command like that!"));
 			return;
 		}
 		

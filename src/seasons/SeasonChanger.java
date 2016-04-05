@@ -7,6 +7,8 @@ import main.MinecraftDontStarve;
 
 import org.bukkit.World;
 
+import com.massivecraft.massivecore.util.Txt;
+
 public class SeasonChanger {
 	
 	public static void startSeason(World world, Season season) 
@@ -39,7 +41,7 @@ public class SeasonChanger {
 		startNextFile(world, season);
 	}
 	
-	public static boolean startNextFile(World world, Season season)
+	public static void startNextFile(World world, Season season)
 	{
 		MinecraftDontStarve.original_biomes = new ArrayList<BlockArrayIO.Datum>();
 		if(BlockArrayIO.readSingleFile(MinecraftDontStarve.original_biomes, world, MinecraftDontStarve.currentFileNumber))
@@ -52,17 +54,26 @@ public class SeasonChanger {
 			}
 			else
 			{
-				new BlockSeasonChanger(world, MinecraftDontStarve.original_biomes, season, MinecraftDontStarve.batchSize).runTaskTimer(MinecraftDontStarve.getCurrentPlugin(), 0, MinecraftDontStarve.ticksBetweenBatches);
+				Debug.out(Txt.parse("Season fully changed to "+MinecraftDontStarve.current_season.toString()+"!"));
+				MinecraftDontStarve.isCurrentlyDoingASeasonTask = false;
+				MinecraftDontStarve.currentFileNumber = 0;
+				return;
+				//TODO: Enable this when it has some effect?
+				//new BlockSeasonChanger(world, MinecraftDontStarve.original_biomes, season, MinecraftDontStarve.batchSize).runTaskTimer(MinecraftDontStarve.getCurrentPlugin(), 0, MinecraftDontStarve.ticksBetweenBatches);
 			}
-			
-			MinecraftDontStarve.currentFileNumber++;
-			return true;
 		}
 		else
 		{
+			Debug.out("Couldn't start file "+MinecraftDontStarve.currentFileNumber+". Skipping it.");
+		}
+		
+		MinecraftDontStarve.currentFileNumber++;
+		
+		if(MinecraftDontStarve.currentFileNumber > BlockArrayIO.countFiles(world))
+		{
 			MinecraftDontStarve.isCurrentlyDoingASeasonTask = false;
 			MinecraftDontStarve.currentFileNumber = 0;
-			return false;
+			Debug.out(Txt.parse("Season fully changed to "+MinecraftDontStarve.current_season.toString()+"!"));
 		}
 	}
 	

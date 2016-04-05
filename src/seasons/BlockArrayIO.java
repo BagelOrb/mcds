@@ -7,13 +7,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
-import main.Debug;
 import main.MinecraftDontStarve;
 
 import org.bukkit.World;
@@ -92,12 +88,10 @@ public class BlockArrayIO {
 	
 	public static boolean write(World world)
 	{
-		LinkedList<Datum> data = new LinkedList<Datum>();
-
-		int i = 0;
 		int fileNumber = 0;
-		double blocksPerFile = world.getWorldBorder().getSize() * 16;
-		boolean success = true;
+		int startingZ = 0;
+		int endingZ = 0;
+		int numberOfRowsPerFile = 16;
 		
 		WorldBorder border = world.getWorldBorder();
 		
@@ -105,6 +99,8 @@ public class BlockArrayIO {
 		{
 			return false;
 		}
+		
+		long ticksPerFile = (long) Math.ceil(border.getSize() / 1000) + 1;
 		
 		//TODO Backup old files!
 		
@@ -117,42 +113,32 @@ public class BlockArrayIO {
 		//Create New files
 		int radius = (int) (border.getSize() / 2);
 		
-		for (short z = (short) (border.getCenter().getBlockZ() - radius); z < border.getCenter().getBlockZ() + radius; z++)
+		startingZ = border.getCenter().getBlockZ() - radius;
+		
+		double numberOfFullFiles = Math.floor(border.getSize() / numberOfRowsPerFile);
+		int numberOfFiles = (int) (Math.ceil(border.getSize() / numberOfRowsPerFile));
+		
+		for(int i = 0; i < numberOfFullFiles; i++)
 		{
-			for (short x = (short) (border.getCenter().getBlockX() - radius); x < border.getCenter().getBlockX() + radius; x++)
-			{
-			
-				Biome biome = world.getBiome(x,  z);
-				if (!SeasonBiomes.biomeRemainsUnchanged(biome))
-				{
-					data.add(new Datum(x, z, biome));
-					i++;
-					if(i >= blocksPerFile)
-					{
-						long seed = 123;
-						Collections.shuffle(data, new Random(seed));
-						success = success && writeSingleFile(data, world, "biomedata_"+fileNumber+".xzdata");
-						data.clear();
-						fileNumber++;
-						i = 0;
-					}
-				}
-			}
-			if (z % 8 == 0)
-			{
-				Debug.out("z: "+z);
-			}
+			endingZ = startingZ + numberOfRowsPerFile;
+			new BlockArrayWriter(world, startingZ, endingZ, fileNumber, numberOfFiles).runTaskLater(MinecraftDontStarve.getCurrentPlugin(), ticksPerFile * i);
+			fileNumber++;
+			startingZ = endingZ;
 		}
 		
-		if(!data.isEmpty())
-		{
-			success = success && writeSingleFile(data, world, "biomedata_"+fileNumber+".xzdata");
-			data.clear();
-		}
-
-		data = null;
+		endingZ = border.getCenter().getBlockZ() + radius;
 		
-		return success;
+		if(startingZ < endingZ)
+		{
+			new BlockArrayWriter(world, startingZ, endingZ, fileNumber, numberOfFiles).runTaskLater(MinecraftDontStarve.getCurrentPlugin(), (long) (ticksPerFile * numberOfFullFiles));
+		}
+		
+		return true;
+	}
+	
+	public static boolean writeSingleFile(List<Datum> data, World world, int fileNumber)
+	{		
+		return writeSingleFile(data, world, "biomedata_"+fileNumber+".xzdata");
 	}
 	
 	public static boolean writeSingleFile(Iterable<Datum> data, World world, String fileName)
@@ -180,7 +166,6 @@ public class BlockArrayIO {
 			return false;
 		}
 		
-		Debug.out(fileName + " saved!");
 		return true;		
 	}
 	
@@ -226,22 +211,6 @@ public class BlockArrayIO {
 		return readSingleFile(data, world, "biomedata_"+currentFileNumber+".xzdata");
 	}
 	
-	public static boolean readAll(List<Datum> data, World world)
-	{
-		boolean success = true;
-	    File[] files = new File(MinecraftDontStarve.defaultSavePath+world.getName()+"/").listFiles();
-	    for (File file : files)
-	    {
-	    	//TODO Add type check for safe files
-	    	if(file.isFile())
-	    	{
-	    		success = success && readSingleFile(data, world, file.getName());
-	    	}
-	    }
-		
-		return success;
-	}
-	
 	public static boolean deleteAll(World world)
 	{
 		boolean success = true;
@@ -256,6 +225,12 @@ public class BlockArrayIO {
 	    }
 		
 		return success;
+	}
+	
+	public static int countFiles(World world)
+	{
+	    File[] files = new File(MinecraftDontStarve.defaultSavePath+world.getName()+"/").listFiles();
+	    return files.length;
 	}
 	
 }

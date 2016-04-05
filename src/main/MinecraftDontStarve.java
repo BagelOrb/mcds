@@ -14,7 +14,6 @@ import spoiling.PlayerSpoilageUpdater;
 import spoiling.SpoilListener;
 
 import com.massivecraft.massivecore.MassivePlugin;
-
 import commands.CmdMCDSCommand;
 
 
@@ -42,7 +41,7 @@ public class MinecraftDontStarve extends MassivePlugin {
 	
 	public static final double maxBorderSize = 10000; // Maximum size (length of a side) of the worldborder to still work with this plugin. Default: 10000
 	public static final int batchSize = 500; // Number of columns in a batch. Default: 500
-	public static final int ticksBetweenBatches = 1; // Number of ticks between each batch. Default: 1
+	public static final int ticksBetweenBatches = 2; // Number of ticks between each batch. Default: 1
 	
 	public final SeasonListener seasonListener = new SeasonListener(this);
 	public final SpoilListener spoilListener = new SpoilListener(this);

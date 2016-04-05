@@ -1,12 +1,8 @@
 package commands;
 
 
-import java.util.ArrayList;
-
 import main.Debug;
 import main.MinecraftDontStarve;
-
-import org.bukkit.scheduler.BukkitRunnable;
 
 import seasons.BlockArrayIO;
 
@@ -88,36 +84,18 @@ public class CmdMCDSWriteBiomeData extends MCDSCommand{
 			}.runTaskAsynchronously(MinecraftDontStarve.getCurrentPlugin());
 			*/
 			
-			Debug.out("starting writing biomes");
+			Debug.out("Starting to write biomes");
 			boolean success = BlockArrayIO.write(player.getWorld());
 			if (success)
 			{
-				Debug.out("finished writing biomes");
+				Debug.out("Creating biome files...");
 			}
 			else 
 			{
-				Debug.out("couldnt write biomes");						
+				Debug.out("couldnt write biomes!");						
 			}
 			MinecraftDontStarve.isCurrentlyDoingASeasonTask = false;
 			
-		}
-		else if (rw.equals("r"))
-		{
-			new BukkitRunnable() {
-				
-				@Override
-				public void run() {
-					Debug.out("starting reading biomes");
-					
-					MinecraftDontStarve.original_biomes = new ArrayList<BlockArrayIO.Datum>(); 
-					boolean success = BlockArrayIO.readAll(MinecraftDontStarve.original_biomes, player.getWorld());
-					if (!success)
-					{
-						Debug.out("Couldn't read file!");
-					}
-					Debug.out("biome file contains "+MinecraftDontStarve.original_biomes.size());
-				}
-			}.runTaskAsynchronously(MinecraftDontStarve.getCurrentPlugin());
 		}
 		else
 		{

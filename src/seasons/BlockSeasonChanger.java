@@ -16,8 +16,6 @@ public class BlockSeasonChanger extends BukkitRunnable {
 	Iterator<BlockArrayIO.Datum> iter;
 	List<BlockArrayIO.Datum> data;
 	int batch_size;
-	static int numberDone;
-	static int dataLength;
 	
 	public BlockSeasonChanger(World world, List<BlockArrayIO.Datum> data, Season season, int batch_size)
 	{
@@ -26,8 +24,6 @@ public class BlockSeasonChanger extends BukkitRunnable {
 		this.season = season;
 		this.batch_size = batch_size;
 		this.iter = data.iterator();
-		BlockSeasonChanger.numberDone = 0;
-		BlockSeasonChanger.dataLength = data.size();
 	}
 	
 	@Override
@@ -38,7 +34,6 @@ public class BlockSeasonChanger extends BukkitRunnable {
 
 			if (!iter.hasNext())
 			{
-				Debug.out("Processing list (100%)");
 				this.cancel();
 				SeasonChanger.startNextFile(world, season);
 				return;
@@ -66,21 +61,15 @@ public class BlockSeasonChanger extends BukkitRunnable {
 		{
 			MinecraftDontStarve.isCurrentlyDoingASeasonTask = false;
 			MinecraftDontStarve.currentFileNumber = 0;
-			Debug.out("CANCELLED! ("+(Math.round((float)(BlockSeasonChanger.numberDone*100)) / BlockSeasonChanger.dataLength)+"%)");
+			Debug.out("CANCELLED!");
 			this.cancel();
 			return;
 		}
 		
 		if (!iter.hasNext())
 		{
-			Debug.out("Processing list (100%)");
 			this.cancel();
 			SeasonChanger.startNextFile(world, season);
-		}
-		else
-		{
-			BlockSeasonChanger.numberDone = BlockSeasonChanger.numberDone + batch_size;
-			//Debug.out("Processing list ("+(Math.round((float)(BlockSeasonChanger.numberDone*100)) / BlockSeasonChanger.dataLength)+"%)");
 		}
 	}
 
