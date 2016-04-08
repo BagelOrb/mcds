@@ -1,6 +1,7 @@
 package seasons;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import main.Debug;
 import main.MinecraftDontStarve;
@@ -43,14 +44,14 @@ public class SeasonChanger {
 	
 	public static void startNextFile(World world, Season season)
 	{
-		MinecraftDontStarve.original_biomes = new ArrayList<BlockArrayIO.Datum>();
-		if(BlockArrayIO.readSingleFile(MinecraftDontStarve.original_biomes, world, MinecraftDontStarve.currentFileNumber))
+		List<BlockArrayIO.Datum> original_biomes = new ArrayList<BlockArrayIO.Datum>();
+		if(BlockArrayIO.readSingleFile(original_biomes, world, MinecraftDontStarve.currentFileNumber))
 		{
 			Debug.out("Starting file "+MinecraftDontStarve.currentFileNumber+".");
 			
 			if (season == Season.SPRING || season == Season.WINTER)
 			{
-				new BlockSeasonChanger(world, MinecraftDontStarve.original_biomes, season, MinecraftDontStarve.batchSize / 2).runTaskTimer(MinecraftDontStarve.getCurrentPlugin(), 0, MinecraftDontStarve.ticksBetweenBatches);	
+				new BlockSeasonChanger(world, original_biomes, season, MinecraftDontStarve.batchSize / 2).runTaskTimer(MinecraftDontStarve.getCurrentPlugin(), 0, MinecraftDontStarve.ticksBetweenBatches);	
 			}
 			else
 			{

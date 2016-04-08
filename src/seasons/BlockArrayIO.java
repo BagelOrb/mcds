@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import main.MinecraftDontStarve;
 
@@ -169,6 +171,29 @@ public class BlockArrayIO {
 		return true;		
 	}
 	
+	public static boolean addToFile(List<Datum> data, World world, int fileNumber)
+	{		
+		return addToFile(data, world, "biomedata_"+fileNumber+".xzdata");
+	}
+	
+	public static boolean addToFile(List<Datum> data, World world, String fileName)
+	{
+		if(!readSingleFile(data, world, fileName))
+		{
+			return false;
+		}
+		
+		if(!deleteSingleFile(world, fileName))
+		{
+			return false;
+		}
+		
+		long seed = 123;
+		Collections.shuffle(data, new Random(seed));
+		
+		return writeSingleFile(data, world, fileName);
+	}
+	
 	public static boolean readSingleFile(List<Datum> data, World world, String fileName)
 	{
 		BufferedReader reader = null;
@@ -225,6 +250,23 @@ public class BlockArrayIO {
 	    }
 		
 		return success;
+	}
+	
+	public static boolean deleteSingleFile(World world, int fileNumber)
+	{
+		return deleteSingleFile(world, "biomedata_"+fileNumber+".xzdata");
+	}
+	
+	public static boolean deleteSingleFile(World world, String fileName)
+	{
+	    File file = new File(MinecraftDontStarve.defaultSavePath+world.getName()+"/"+fileName);
+
+    	if(file.isFile())
+    	{
+    		return file.delete();
+    	}
+    	
+    	return false;
 	}
 	
 	public static int countFiles(World world)

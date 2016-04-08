@@ -1,12 +1,9 @@
 package main;
 
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
 
-import seasons.BlockArrayIO;
 import seasons.Season;
 import seasons.SeasonIO;
 import seasons.SeasonListener;
@@ -23,8 +20,6 @@ public class MinecraftDontStarve extends MassivePlugin {
 	public CmdMCDSCommand outerCommand;
 
 	public static World defaultWorld;
-	
-	public static List<BlockArrayIO.Datum> original_biomes;
 	
 	public static Season current_season = Season.AUTUMN;
 	

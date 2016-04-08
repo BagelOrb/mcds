@@ -33,10 +33,10 @@ public class BlockArrayWriter extends BukkitRunnable {
 	@Override
 	public void run() 
 	{
-		LinkedList<Datum> data = new LinkedList<Datum>();
-		
+		boolean firstRow = fileNumber < 1;
+		LinkedList<Datum> data1 = new LinkedList<Datum>();
+		LinkedList<Datum> data2 = new LinkedList<Datum>();
 		WorldBorder border = world.getWorldBorder();
-
 		int radius = (int) (border.getSize() / 2);
 		
 		for (short z = (short) startingZ; z < endingZ; z++)
@@ -47,26 +47,46 @@ public class BlockArrayWriter extends BukkitRunnable {
 				Biome biome = world.getBiome(x,  z);
 				if (!SeasonBiomes.biomeRemainsUnchanged(biome))
 				{
-					data.add(new Datum(x, z, biome));
+					if(Math.random() < 0.5)
+					{
+						data1.add(new Datum(x, z, biome));
+					}
+					else
+					{
+						data2.add(new Datum(x, z, biome));
+					}
 				}
 			}
 		}
 		
-		if(!data.isEmpty())
+		if(firstRow)
+		{
+			data1.addAll(data2);
+		}
+		else
+		{
+			if(!BlockArrayIO.addToFile(data2, world, fileNumber-1))
+			{
+				Debug.out("ERROR Biome file "+(fileNumber)+"/"+numberOfFiles+" FAILED TO APPEND!");
+			}
+		}
+		
+		if(!data1.isEmpty())
 		{
 			long seed = 123;
-			Collections.shuffle(data, new Random(seed));
-			if (BlockArrayIO.writeSingleFile(data, world, fileNumber))
+			Collections.shuffle(data1, new Random(seed));
+			if (BlockArrayIO.writeSingleFile(data1, world, fileNumber))
 			{
 				Debug.out("Biome file "+(fileNumber+1)+"/"+numberOfFiles+" saved!");
 			}
 			else
 			{
-				Debug.out("ERROR Biome file "+(fileNumber+1)+"/"+numberOfFiles+" FAILED!");
+				Debug.out("ERROR Biome file "+(fileNumber+1)+"/"+numberOfFiles+" FAILED TO WRITE!");
 			}
 		}
 
-		data = null;
+		data1 = null;
+		data2 = null;
 	}
 
 	
