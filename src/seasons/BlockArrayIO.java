@@ -240,13 +240,17 @@ public class BlockArrayIO {
 	{
 		boolean success = true;
 	    File[] files = new File(MinecraftDontStarve.defaultSavePath+world.getName()+"/").listFiles();
-	    for (File file : files)
+	    
+	    if(files != null)
 	    {
-	    	//TODO Add type check for safe files
-	    	if(file.isFile())
-	    	{
-	    		success = success && file.delete();
-	    	}
+		    for (File file : files)
+		    {
+		    	//TODO Add type check for safe files
+		    	if(file.isFile())
+		    	{
+		    		success = success && file.delete();
+		    	}
+		    }
 	    }
 		
 		return success;
