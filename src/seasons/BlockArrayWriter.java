@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import main.Debug;
+import main.MinecraftDontStarve;
 
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
@@ -37,7 +38,7 @@ public class BlockArrayWriter extends BukkitRunnable {
 		LinkedList<Datum> data1 = new LinkedList<Datum>();
 		LinkedList<Datum> data2 = new LinkedList<Datum>();
 		WorldBorder border = world.getWorldBorder();
-		int radius = (int) (border.getSize() / 2);
+		int radius = (int) (border.getSize() / 2 + MinecraftDontStarve.blocksBeyondBorder);
 		
 		for (short z = (short) startingZ; z < endingZ; z++)
 		{
@@ -68,6 +69,7 @@ public class BlockArrayWriter extends BukkitRunnable {
 			if(!BlockArrayIO.addToFile(data2, world, fileNumber-1))
 			{
 				Debug.out("ERROR Biome file "+(fileNumber)+"/"+numberOfFiles+" FAILED TO APPEND!");
+				data1.addAll(data2);
 			}
 		}
 		

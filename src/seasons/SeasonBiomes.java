@@ -10,7 +10,8 @@ public class SeasonBiomes {
 		{
 		case DEEP_OCEAN:
 		case OCEAN:
-			
+		
+		/*
 		case DESERT:
 		case DESERT_HILLS:
 		case MUTATED_DESERT:
@@ -26,6 +27,7 @@ public class SeasonBiomes {
 		case MUTATED_MESA:
 		case MUTATED_MESA_CLEAR_ROCK:
 		case MUTATED_MESA_ROCK:
+		*/
 			
 		case FROZEN_OCEAN:
 		case FROZEN_RIVER:

@@ -104,16 +104,7 @@ public class SeasonListener implements Listener
 	
 	@EventHandler
 	public void serverListPing(ServerListPingEvent event)
-	{
-		switch(MinecraftDontStarve.current_season)
-		{
-			case WINTER:
-				event.setMotd(Txt.parse("<reset><lime><bold>MineRight.eu<reset> <gold>Minecraft 1.9 Faction Server<reset>\n<aqua><bold><underline>WINTER IS HERE!<reset> <info>Current Season: <reset>"+MinecraftDontStarve.current_season.toString()));
-				break;
-			default:
-				event.setMotd(Txt.parse("<reset><lime><bold>MineRight.eu<reset> <gold>Minecraft 1.9 Faction Server<reset>\n<aqua><bold><underline>WINTER IS COMING!<reset> <info>Current Season: <reset>"+MinecraftDontStarve.current_season.toString()));
-				break;
-		}
-		
+	{		
+		event.setMotd(Txt.parse("<reset><gold><bold>MineRight.eu<reset>\n<info>Current season: <reset>"+MinecraftDontStarve.current_season.toString()+"<reset>"));
 	}
 }

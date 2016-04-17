@@ -26,13 +26,15 @@ public class MinecraftDontStarve extends MassivePlugin {
 	public static int currentFileNumber = 0;
 	public static boolean isCancelled = true;
 	public static boolean isCurrentlyDoingASeasonTask = false;
+
+	public static final double blocksBeyondBorder = 208;
 	
 	public static final String defaultSavePath = "plugins/minecraftdontstarve/saves/";
 	public static final String seasonSaveFile = "season.txt";
 	
 	public static final int ticksPerMinecraftDay = 24000; // Default: 24000
 	public static final int maxLifeTimeInMinecraftDays = 10000; // Ultimate maximum lifetime of a food item. Default: 10000
-	public static final int delayBetweenPlayerSpoilageChecks = 200; // Time in ticks between spoilage-checking all player invs. Default: 100
+	public static final int delayBetweenPlayerSpoilageChecks = 1000; // Time in ticks between spoilage-checking all player invs. Default: 1000
 	
 	public static final double maxBorderSize = 10000; // Maximum size (length of a side) of the worldborder to still work with this plugin. Default: 10000
 	public static final int batchSize = 500; // Number of columns in a batch. Default: 500

@@ -113,12 +113,12 @@ public class BlockArrayIO {
 		}
 		
 		//Create New files
-		int radius = (int) (border.getSize() / 2);
+		int radius = (int) (border.getSize() / 2 + MinecraftDontStarve.blocksBeyondBorder);
 		
 		startingZ = border.getCenter().getBlockZ() - radius;
 		
-		double numberOfFullFiles = Math.floor(border.getSize() / numberOfRowsPerFile);
-		int numberOfFiles = (int) (Math.ceil(border.getSize() / numberOfRowsPerFile));
+		double numberOfFullFiles = Math.floor((border.getSize() + MinecraftDontStarve.blocksBeyondBorder * 2) / numberOfRowsPerFile);
+		int numberOfFiles = (int) (Math.ceil((border.getSize() + MinecraftDontStarve.blocksBeyondBorder * 2) / numberOfRowsPerFile));
 		
 		for(int i = 0; i < numberOfFullFiles; i++)
 		{
